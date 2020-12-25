@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup as bs
 
 HARRY = 'SwankyTiger-211960'
 ME = 'LetsGo-21230'
+
+
 def get_player_url():
     region = input('Region: ')
     platform = input('Platform: ')
@@ -16,6 +18,7 @@ def get_player_url():
     url = f'https://playoverwatch.com/{region}/career/{platform}/{name}/'
     return url
 
+
 def fetch_content(url):
     print()
     print(f'Searching...')
@@ -23,6 +26,7 @@ def fetch_content(url):
     page = requests.get(url)
     soup = bs(page.content, 'html.parser')
     return soup
+
 
 def fetch_player_stats(soup):
     # level = soup.find('div', class_='player-level')
@@ -36,8 +40,7 @@ def fetch_player_stats(soup):
     for role, sr in zip(comp_rank_titles, comp_rank_levels):
         comp_ranks.append((role['data-ow-tooltip-text'][:role['data-ow-tooltip-text'].find('Skill')-1], sr.text))
 
-    comp = soup.findAll('div', {'data-category-id' : '0x0860000000000021'})
-    soup.fin
+    comp = soup.findAll('div', {'data-category-id': '0x0860000000000021'})
     hero_name_data = comp[1].findAll('div', class_='ProgressBar-title')
     hero_time_data = comp[1].findAll('div', class_='ProgressBar-description')
     hero_names = []
@@ -45,7 +48,9 @@ def fetch_player_stats(soup):
     for name, time in zip(hero_name_data[:5], hero_time_data[:5]):
         hero_names.append(name.text)
         hero_times.append(time.text)
-    return set(comp_ranks), hero_names, hero_times #comp_ranks is turned into a set because it contains dupicates for some reason
+    return set(comp_ranks), hero_names, hero_times  # comp_ranks is turned into a set because it contains duplicates
+    # for some reason
+
 
 def display_stats(comp_ranks, hero_names, hero_times):
     print('SR')
@@ -58,6 +63,7 @@ def display_stats(comp_ranks, hero_names, hero_times):
     print('---------------------------')
     for name, time in zip(hero_names, hero_times):
         print('{0:10} {1}'.format(name, time))
+
 
 if __name__ == '__main__':
     url = get_player_url()
